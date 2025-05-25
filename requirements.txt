@@ -1,21 +1,60 @@
-streamlit
-openai
-python-dotenv
-langchain
+# Core LLM & Embedding
+openai>=1.3.8
+langchain>=0.2.0
+langchain-community>=0.2.0
+tiktoken
 faiss-cpu
-PyMuPDF
-unstructured
+
+# PDF, Word, Excel Parsing
+PyMuPDF             # <- this is pymupdf (used as fitz)
 pypdf
-playwright
-beautifulsoup4
-requests
+python-docx
 python-pptx
-pytesseract
-Pillow
-pandas
 openpyxl
-fpdf
-plotly
-SpeechRecognition
 xlrd>=2.0.1
-openpyxl
+unstructured
+pytesseract
+
+# OCR & Image
+Pillow
+imageio
+pdf2image
+python-magic
+
+# HTML, Web Scraping
+beautifulsoup4
+html5lib
+playwright
+requests
+lxml
+
+# NLP & Audio
+SpeechRecognition
+nltk
+langdetect
+
+# Streamlit & Dashboarding
+streamlit>=1.30
+streamlit_chat
+altair
+plotly
+pydeck
+
+# Export
+fpdf
+
+# Utility
+python-dotenv
+pandas
+numpy
+matplotlib
+tqdm
+rich
+
+# Async & HTTP
+httpx
+aiofiles
+watchdog
+
+# GitHub/CI/CD integrations
+gitpython
