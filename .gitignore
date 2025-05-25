@@ -1,8 +1,13 @@
-vectorstore/ 
-documents/
 venv/
-app/.env
-*.jsonl
+__pycache__/
+vectorstore/
+documents/
 *.faiss
 *.pkl
 *.zip
+*.pyc
+.env
+# Ignore all JSONL by default
+*.jsonl
+# EXCEPTION: allow fine_tune_subsets
+!fine_tune_subsets/*.jsonl
