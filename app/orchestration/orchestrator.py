@@ -1,28 +1,25 @@
-# agent_oman/app/orchestration/orchestrator.py
-
 import os
-from chat_engine import query_documents
-from web_scraper import scrape_google
 from langchain.chat_models import ChatOpenAI
+from langchain.agents import Tool, initialize_agent, AgentType
+from langchain.chains import RetrievalQA
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
+from app.web_scraper import scrape_google, scrape_full_page
 
-fallback_model = "gpt-3.5-turbo"
+def run_orchestrated_task(query, persona, lang="en"):
+    embeddings = OpenAIEmbeddings()
+    db = FAISS.load_local("vectorstore", embeddings, allow_dangerous_deserialization=True)
+    retriever = db.as_retriever()
+    llm = ChatOpenAI(model="gpt-4", temperature=0.2)
 
-# === Run Task via Orchestration ===
-def run_orchestrated_task(query, persona, lang):
-    try:
-        if "search" in query.lower():
-            return scrape_google(query)
+    system_prompt = f"You are Agent-Oman, a {persona}. Reply in {'Arabic' if lang == 'ar' else 'English'} with strategic clarity."
 
-        model = os.getenv("FINE_TUNED_MODEL", fallback_model)
+    tools = [
+        Tool(name="📄 LocalDocs", func=lambda q: RetrievalQA.from_chain_type(llm=llm, retriever=retriever).run(q),
+             description="Search in uploaded knowledge base"),
+        Tool(name="🌐 GoogleSearch", func=lambda q: scrape_google(q), description="Search recent web data"),
+        Tool(name="🕵️ FullPageScraper", func=lambda q: scrape_full_page(q), description="Scrape page content by URL")
+    ]
 
-        # Adjust the prompt based on language
-        if lang == "ar":
-            adjusted_query = f"الرجاء إعطائي استشارة مهنية لهذا المحتوى:\n\n{query}"
-        else:
-            adjusted_query = f"Please provide a professional strategic recommendation for the following:\n\n{query}"
-
-        # Send to document query engine
-        return query_documents(adjusted_query, persona)
-
-    except Exception as e:
-        return f"⚠️ Error occurred while routing task: {e}"
+    agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=False)
+    return agent.run(query)

@@ -1,3 +1,2 @@
-import os 
-import subprocess 
-subprocess.run(["streamlit", "run", "app/main.py"]) 
+
+# [Streamlit UI script content with new KB handling, multilingual UI, etc.]

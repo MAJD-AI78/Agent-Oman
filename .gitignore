@@ -1,5 +1,8 @@
-"vectorstore/" 
-"documents/" 
-"documents/" 
-"vectorstore/" 
-"app/.env" 
+vectorstore/ 
+documents/
+venv/
+app/.env
+*.jsonl
+*.faiss
+*.pkl
+*.zip
