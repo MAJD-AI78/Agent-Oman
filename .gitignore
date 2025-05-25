@@ -2,3 +2,4 @@
 "documents/" 
 "documents/" 
 "vectorstore/" 
+"app/.env" 
